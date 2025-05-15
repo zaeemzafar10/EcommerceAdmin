@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router() 
 
+// admin auth api starts here
+     router.post('/register', require('../controller/Admin/authController').registerAdmin);
+     router.post('/login', require('../controller/Admin/authController').loginAdmin);
+// admin auth api end here
+
 
 // category api starts here
     // router.post('/category');

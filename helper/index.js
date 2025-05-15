@@ -11,11 +11,9 @@ exports.generateToken = (user) => {
           _id: user._id,  
           email: user.email,
           role : user.role
-          // name: user.name,
-          // isAdmin: user.isAdmin,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: "1d" }
       );
       return token;
     } catch (error) {
