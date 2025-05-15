@@ -1,0 +1,425 @@
+{
+	"info": {
+		"_postman_id": "730b58e1-1531-4408-82ac-eaa448eed1aa",
+		"name": "Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38187952"
+	},
+	"item": [
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "category",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{adminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"Toys\", \r\n    \"description\" : \"its all about childrens toys\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/category/create",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"category",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/admin/category/get",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"category",
+										"get"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "product",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{adminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"Women T-shirt\", \r\n    \"price\" : 84, \r\n    \"stock\" : 100 , \r\n    \"categoryId\" : 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/product",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{local}}/admin/product/get",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"product",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{adminToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"name\" : \"\", \r\n    //\"price\" : 326\r\n    // \"stock\" : 901\r\n    \"categoryId\" : 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/product/edit/1",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"product",
+										"edit",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "sales",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "order",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{userToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{local}}/user/order",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"user",
+										"order"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"admin\" , \r\n    \"email\" : \"admin@admin.com\", \r\n    \"password\" : \"Aezakmi90!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/register",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract Token and Set Header\", function () {\r",
+											"    let jsonData = pm.response.json();\r",
+											"    console.log(\"jsonData\",jsonData)\r",
+											"    if (jsonData.data && jsonData.data.token) {\r",
+											"        let userToken = \"bearer\"+ \" \" +jsonData.data.token;\r",
+											"\r",
+											"        // Set the token as an environment variable\r",
+											"        // pm.environment.set(\"userToken\", userToken);\r",
+											"        // pm.globals.set(\"userToken\", userToken);\r",
+											"        pm.collectionVariables.set(\"adminToken\", userToken);\r",
+											"        \r",
+											"        console.log(\"Token stored:\", userToken);\r",
+											"    } else {\r",
+											"        pm.test(\"Token not found in response\", function () {\r",
+											"            pm.expect(jsonData.data.token).to.exist;\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\" : \"admin@admin.com\", \r\n    \"password\" : \"Aezakmi90!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/login",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"john\" , \r\n    \"email\" : \"john@yopmail.com\", \r\n    \"password\" : \"Aezakmi90!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/user/register",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract Token and Set Header\", function () {\r",
+											"    let jsonData = pm.response.json();\r",
+											"    console.log(\"jsonData\",jsonData)\r",
+											"    if (jsonData.data && jsonData.data.token) {\r",
+											"        let userToken = \"bearer\"+ \" \" +jsonData.data.token;\r",
+											"\r",
+											"        // Set the token as an environment variable\r",
+											"        // pm.environment.set(\"userToken\", userToken);\r",
+											"        // pm.globals.set(\"userToken\", userToken);\r",
+											"        pm.collectionVariables.set(\"userToken\", userToken);\r",
+											"        \r",
+											"        console.log(\"Token stored:\", userToken);\r",
+											"    } else {\r",
+											"        pm.test(\"Token not found in response\", function () {\r",
+											"            pm.expect(jsonData.data.token).to.exist;\r",
+											"        });\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\" : \"john@yopmail.com\", \r\n    \"password\" : \"Aezakmi90!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/user/login",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "local",
+			"value": "http://localhost:3200/api",
+			"type": "string"
+		},
+		{
+			"key": "userToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
