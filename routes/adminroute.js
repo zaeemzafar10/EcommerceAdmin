@@ -13,7 +13,7 @@ const {  validateToken , verifyAdminToken } = require('../helper/index.js')
 // category api end here
 
 // product api starts here
-    // router.post('/product');
+     router.post('/product' , validateToken , verifyAdminToken , require('../controller/Admin/productController').createProduct);
     // router.post('/product/get');
     // router.put('/product/edit/:id');
 // product api end here
