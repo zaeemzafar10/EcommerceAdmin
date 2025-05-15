@@ -1,3 +1,9 @@
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv")
+
+dotenv.config();
+
+
 exports.generateToken = (user) => {
     try {
       const token = jwt.sign(
@@ -16,9 +22,6 @@ exports.generateToken = (user) => {
       console.log("=========>",error)
     }
   };
-  
-  
-  
   
   exports.validateToken = (req, res, next) => {
     const bearerHeader = req.headers["authorization"];
@@ -46,7 +49,6 @@ exports.generateToken = (user) => {
       }
     });
   };
-
 
   exports.verifyUserToken =   (req, res, next) => {
     jwt.verify(req.token, process.env.JWT_SECRET, async(err, authData) => {
