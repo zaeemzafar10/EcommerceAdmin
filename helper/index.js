@@ -1,3 +1,5 @@
+const { PrismaClient } = require('../generated/prisma');
+const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv")
 
@@ -29,36 +31,41 @@ exports.generateToken = (user) => {
       req.token = bearerToken;
       next();
     } else {
-      res.json(ApiResponse({}, { error: "Invalid Token" }, false));
+      return res.status(400).json({ error: 'Invalid Token' });
     }
   };
   
   exports.verifyAdminToken =   (req, res, next) => {
     jwt.verify(req.token, process.env.JWT_SECRET, async(err, authData) => {
       if (err) {
-        //res.json(ApiResponse({}, { error: "Invalid Token" }, false));
+        console.log(err);
         res.json({ message : "Token is Invalid"})
       } else {
         req.user = authData;
-        const checkAdmin = await userModel.findOne({ role :  req.user.role  })
+        const checkAdmin = await prisma.user.findFirst({ where : { role :  req.user.role  }})  
         if(checkAdmin.role === "ADMIN"){
           next();
-        }
+        }else{
+            res.json({ message : "You are not ADMIN"})
+          }
       }
     });
   };
 
   exports.verifyUserToken =   (req, res, next) => {
     jwt.verify(req.token, process.env.JWT_SECRET, async(err, authData) => {
-      if (err) {
-        //res.json(ApiResponse({}, { error: "Invalid Token" }, false));
-        res.json({ message : "Token is Invalid"})
-      } else {
-        req.user = authData;
-        const checkAdmin = await userModel.findOne({ role :  req.user.role  })
-        if(checkAdmin.role === "USER"){
-          next();
+        if (err) {
+          console.log(err);
+          
+          res.json({ message : "Token is Invalid"})
+        } else {
+          req.user = authData;
+          const checkAdmin = await prisma.user.findFirst({ where : { role :  req.user.role  }})  
+          if(checkAdmin.role === "USER"){
+            next();
+          }else{
+              res.json({ message : "You are not USER"})
+            }
         }
-      }
-    });
+      });
   };

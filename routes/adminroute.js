@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router() 
-
+const {  validateToken , verifyAdminToken } = require('../helper/index.js')
 // admin auth api starts here
      router.post('/register', require('../controller/Admin/authController').registerAdmin);
      router.post('/login', require('../controller/Admin/authController').loginAdmin);
@@ -8,8 +8,8 @@ const router = express.Router()
 
 
 // category api starts here
-    // router.post('/category');
-    // router.post('/category/get');
+     router.post('/category/create' ,  validateToken , verifyAdminToken , require('../controller/Admin/categoryController').createCategory);
+     router.get('/category/get' , require('../controller/Admin/categoryController').getAllCategories);
 // category api end here
 
 // product api starts here
