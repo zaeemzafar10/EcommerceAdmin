@@ -14,7 +14,7 @@ const {  validateToken , verifyAdminToken } = require('../helper/index.js')
 
 // product api starts here
      router.post('/product' , validateToken , verifyAdminToken , require('../controller/Admin/productController').createProduct);
-    // router.post('/product/get');
+     router.get('/product/get' , require('../controller/Admin/productController').getAllProducts);
     // router.put('/product/edit/:id');
 // product api end here
 

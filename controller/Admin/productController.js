@@ -17,10 +17,26 @@ exports.createProduct = async (req, res) => {
       },
     });
 
-    
-    res.status(201).json({ message: 'Product created successfully', data: newProduct });
+    let allComplete =  await Promise.all([inventory , newProduct])
+
+   if(allComplete) res.status(201).json({ message: 'Product created successfully', data: newProduct });
   } catch (error) {
     console.error('Error creating product:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        inventory: true,
+        category: true
+      }
+    });
+    res.status(200).json({ message: 'Products fetched successfully', data: products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
