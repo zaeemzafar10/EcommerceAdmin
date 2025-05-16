@@ -20,8 +20,8 @@ const {  validateToken , verifyAdminToken } = require('../helper/index.js')
 
 
 // sales api starts here
-     router.get('/sales' , validateToken , verifyAdminToken , require('../controller/Admin/salesController').watchSales);
-    // router.get('/revenue');
+    router.get('/sales' , validateToken , verifyAdminToken , require('../controller/Admin/salesController').watchSales);
+    router.get('/revenue' , validateToken , verifyAdminToken , require('../controller/Admin/salesController').getRevenue);
 // sales api end here
 
 

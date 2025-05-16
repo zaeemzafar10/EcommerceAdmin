@@ -42,37 +42,50 @@ exports.getAllProducts = async (req, res) => {
 }
 
 exports.editProduct = async (req, res) => {
-  const { id } = req.params;
-  const { name, price, stock , categoryId } = req.body;
-
-  try {
-    const product = await prisma.product.findUnique({ where: { id: parseInt(id) } });
-
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    const updatedProduct = await prisma.product.update({
-      where: { id: parseInt(id) },
-      data: {
-        name,
-        price,
-        category: {
-            connect: { id: parseInt(categoryId) },
-          },
-        inventory: {
-          update: {
-            where: { id: product.inventoryId },
-            data:  {
-            stock : stock
-          }
+    const { id } = req.params;
+    const { name, price, stock, categoryId } = req.body;
+  
+    try {
+      const product = await prisma.product.findUnique({ where: { id: parseInt(id) } });
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
         }
+  
+      
+      const updateData = {};
+  
+      if (name) updateData.name = name;
+      if (price) updateData.price = price;
+      if (categoryId) {
+        updateData.category = {
+          connect: { id: parseInt(categoryId) }
+        };
       }
-    }});
-
-    res.status(200).json({ message: 'Product updated successfully', data: updatedProduct });
-  } catch (error) {
-    console.error('Error updating product:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}
+  
+      // Update the product (basic fields)
+      const updatedProduct = await prisma.product.update({
+        where: { id: parseInt(id) },
+        data: {
+          ...updateData,
+          inventory: stock
+            ? {
+                update: {
+                  where: { id: product.inventoryId },
+                  data: { stock }
+                }
+              }
+            : undefined,
+        },
+        include: {
+          inventory: true,
+          category: true
+        }
+      });
+  
+      res.status(200).json({ message: 'Product updated successfully', data: updatedProduct });
+    } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  

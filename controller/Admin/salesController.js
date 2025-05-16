@@ -66,4 +66,62 @@ exports.watchSales = async (req, res) => {
     }
   };
   
+exports.getRevenue = async (req, res) => {
+    const { mode } = req.query;
   
+    try {
+      const filters = {};
+  
+      if (mode === "daily") {
+        filters.createdAt = {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          lte: new Date(new Date().setHours(23, 59, 59, 999)),
+        };
+      }
+
+        if (mode === "weekly") {
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            filters.createdAt = {
+            gte: startOfWeek,
+            lte: new Date(),
+            };
+        }
+
+
+        if(mode === "monthly") {
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            filters.createdAt = {
+            gte: startOfMonth,
+            lte: new Date(),
+            };
+        }
+
+
+        if(mode === "yearly") {
+            const startOfYear = new Date();
+            startOfYear.setMonth(0);
+            startOfYear.setDate(1);
+            filters.createdAt = {
+            gte: startOfYear,
+            lte: new Date(),
+            };
+        }
+  
+      const revenue = await prisma.order.aggregate({
+        where: filters,
+        _sum: {
+          total: true,
+        },
+      });
+  
+      res.status(200).json({
+        message: 'Revenue fetched successfully',
+        data: {mode , revenue : revenue._sum.total || 0},
+      });
+    } catch (error) {
+      console.error('Error fetching revenue:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
