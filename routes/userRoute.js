@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router() 
-
+const { validateToken , verifyUserToken } = require('../helper/index.js')
 
 // user auth routes starts here
     router.post('/register', require('../controller/User/authController').registerUser);
@@ -9,7 +9,7 @@ const router = express.Router()
 
 
 // order routes starts here
-    //router.post('/order' )
+    router.post('/order' , validateToken , verifyUserToken , require('../controller/User/orderController').createOrder);
 // order routes end here
 
 

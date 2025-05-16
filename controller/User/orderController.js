@@ -3,14 +3,14 @@ const prisma = new PrismaClient();
 
 
 exports.createOrder = async (req, res) => {
-const { items} = req.body
-const { _id } = req.user
+const { items , total} = req.body
+const { id } = req.user
 try{
-
+    
     const order = await prisma.order.create({
         data: {
             total,
-            userId: _id,
+            userId: id,
             items: {
                 create: items.map(item => ({
                     productId: item.productId,

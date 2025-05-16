@@ -10,7 +10,7 @@ exports.generateToken = (user) => {
     try {
       const token = jwt.sign(
         {
-          _id: user._id,  
+          id: user.id,  
           email: user.email,
           role : user.role
         },
